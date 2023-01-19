@@ -1,6 +1,20 @@
+/* 
+usage: java -jar m1-server.jar 1025
+*/
+
 package app_kvServer;
 
-public class KVServer implements IKVServer {
+import java.net.BindException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.io.IOException;
+
+import logger.LogSetup;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
+public class KVServer extends Thread implements IKVServer  {
 	/**
 	 * Start KV Server at given port
 	 * @param port given port for storage server to operate
@@ -11,6 +25,13 @@ public class KVServer implements IKVServer {
 	 *           currently not contained in the cache. Options are "FIFO", "LRU",
 	 *           and "LFU".
 	 */
+	private int port;
+
+	public KVServer(int port) {
+		// TODO Auto-generated method stub
+		this.port = port;
+	}
+
 	public KVServer(int port, int cacheSize, String strategy) {
 		// TODO Auto-generated method stub
 	}
@@ -86,4 +107,30 @@ public class KVServer implements IKVServer {
     public void close(){
 		// TODO Auto-generated method stub
 	}
+
+	    /**
+     * Main entry point for the echo server application. 
+     * @param args contains the port number at args[0].
+     */
+    public static void main(String[] args) {
+    	try {
+			new LogSetup("logs/server.log", Level.ALL);
+			if(args.length != 1) {
+				System.out.println("Error! Invalid number of arguments!");
+				System.out.println("Usage: Server <port>!");
+			} else {
+				int port = Integer.parseInt(args[0]);
+				System.out.println("Server is starting...");
+				new KVServer(port).start();	
+			}
+		} catch (IOException e) {
+			System.out.println("Error! Unable to initialize logger!");
+			e.printStackTrace();
+			System.exit(1);
+		} catch (NumberFormatException nfe) {
+			System.out.println("Error! Invalid argument <port>! Not a number!");
+			System.out.println("Usage: Server <port>!");
+			System.exit(1);
+		}
+    }
 }
