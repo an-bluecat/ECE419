@@ -7,9 +7,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.LogManager.l;
+                       
 import client.ClientSocketListener.SocketStatus;
 
 public class Client extends Thread {
@@ -67,7 +66,6 @@ public class Client extends Thread {
 			}
 		} catch (IOException ioe) {
 			logger.error("Connection could not be established!");
-			
 		} finally {
 			if(isRunning()) {
 				closeConnection();
@@ -84,7 +82,7 @@ public class Client extends Thread {
 				listener.handleStatus(SocketStatus.DISCONNECTED);
 			}
 		} catch (IOException ioe) {
-			logger.error("Unable to close connection!");
+			// logger.error("Unable to close connection!");
 		}
 	}
 	
@@ -96,7 +94,7 @@ public class Client extends Thread {
 			//output.close();
 			clientSocket.close();
 			clientSocket = null;
-			logger.info("connection closed!");
+			// logger.info("connection closed!");
 		}
 	}
 	
@@ -121,7 +119,7 @@ public class Client extends Thread {
 		byte[] msgBytes = msg.getMsgBytes();
 		output.write(msgBytes, 0, msgBytes.length);
 		output.flush();
-		logger.info("Send message:\t '" + msg.getMsg() + "'");
+		// logger.info("Send message:\t '" + msg.getMsg() + "'");
     }
 	
 	
@@ -181,7 +179,7 @@ public class Client extends Thread {
 		
 		/* build final String */
 		TextMessage msg = new TextMessage(msgBytes);
-		logger.info("Receive message:\t '" + msg.getMsg() + "'");
+		// logger.info("Receive message:\t '" + msg.getMsg() + "'");
 		return msg;
     }
  	
