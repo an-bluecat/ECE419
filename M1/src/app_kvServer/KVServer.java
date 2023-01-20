@@ -8,11 +8,19 @@ import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+
 
 import logger.LogSetup;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
+
+
 
 public class KVServer extends Thread implements IKVServer  {
 	/**
@@ -30,6 +38,8 @@ public class KVServer extends Thread implements IKVServer  {
 	private int port;
 	private ServerSocket serverSocket;
     private boolean running;
+	
+	public static String STORAGE_DIRECTORY = "./storage"; // static keyword is used to indicate that a variable or a method belongs to a class, rather than an instance of a class
 
 	public KVServer(int port) {
 		// TODO Auto-generated method stub
@@ -104,8 +114,7 @@ public class KVServer extends Thread implements IKVServer  {
 	
 	@Override
 	public int getPort(){
-		// TODO Auto-generated method stub
-		return -1;
+		return this.port;
 	}
 
 	@Override
@@ -140,13 +149,45 @@ public class KVServer extends Thread implements IKVServer  {
 
 	@Override
     public String getKV(String key) throws Exception{
-		// TODO Auto-generated method stub
-		return "";
+		File file = new File(STORAGE_DIRECTORY + "/" + key);
+		if (!file.exists()) {
+			return null;
+		}
+
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		String value = reader.readLine();
+		reader.close();
+		return value;
 	}
 
 	@Override
     public void putKV(String key, String value) throws Exception{
-		// TODO Auto-generated method stub
+		// create a new file with the key as the name under the storage directory
+		// write the value to the file
+		// add the key to the index file ?
+		// create a new file with the key as the name under the storage directory or update if already exists
+		
+		File file = new File(STORAGE_DIRECTORY + "/" + key + ".txt");
+		boolean isFileCreated = true;
+		if (file.exists()) {
+			isFileCreated = false;
+		} else {
+			isFileCreated = file.createNewFile();
+		}
+
+		// write the value to the file
+		FileWriter fileWriter = new FileWriter(file, false); // false for overwrite mode
+		fileWriter.write(value);
+		fileWriter.close();
+
+		// // if file is created add the key to the index file
+		// if (isFileCreated) {
+		// 	File indexFile = new File(INDEX_FILE);
+		// 	FileWriter indexFileWriter = new FileWriter(indexFile, true); // true for append mode
+		// 	indexFileWriter.write(key + "\n");
+		// 	indexFileWriter.close();
+		// }
+
 	}
 
 	@Override
@@ -155,9 +196,23 @@ public class KVServer extends Thread implements IKVServer  {
 	}
 
 	@Override
-    public void clearStorage(){
-		// TODO Auto-generated method stub
-	}
+	public void clearStorage(){
+    File storageDirectory = new File(STORAGE_DIRECTORY);
+    File[] files = storageDirectory.listFiles();
+    if (files != null) {
+        for (File file : files) {
+            // if (!file.delete()) {
+            //     throw new IOException("Failed to delete file: " + file.getName());
+            // }
+			try{
+				file.delete();
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+				
+        }
+    }
+}
 
 
 	@Override
