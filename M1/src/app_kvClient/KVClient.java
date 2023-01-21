@@ -18,13 +18,14 @@ public class KVClient implements IKVClient {
 
     public void run() throws Exception {
         // System.out.println("Running\n");
-        KVStore kvCommStore = new KVStore("localhost", 1500);
+        // TODO: hard-coded. will need to add command line parsing to extract port and host. 
+        KVStore kvCommStore = new KVStore("localhost", 1500); 
         kvCommStore.connect();
     }
 
     public static void main(String[] args) throws Exception {
         BasicConfigurator.configure(); //or else log4j reports error: no appenders found
         KVClient kvClient = new KVClient();
-        kvClient.run();
+        kvClient.run(); // runs the run() function
     }
 }
