@@ -14,7 +14,8 @@ public class TextMessage implements Serializable {
 	private byte[] msgBytes;
 	private static final char LINE_FEED = 0x0A;
 	private static final char RETURN = 0x0D;
-	
+
+
     /**
      * Constructs a TextMessage object with a given array of bytes that 
      * forms the message.

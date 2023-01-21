@@ -7,7 +7,7 @@ import java.io.Serializable;
  * by the server.
  */
 public class TextMessage implements Serializable {
-
+	
 	private static final long serialVersionUID = 5549512212003782618L;
 	private String msg;
 	private byte[] msgBytes;

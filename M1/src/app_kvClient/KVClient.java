@@ -10,6 +10,7 @@ public class KVClient implements IKVClient {
     @Override
     public void newConnection(String hostname, int port) throws Exception{
         // TODO Auto-generated method stub
+        // System.out.println("Getting new connect");
         kvCommStore = new KVStore(hostname, port); 
         kvCommStore.connect();
     }
@@ -23,7 +24,8 @@ public class KVClient implements IKVClient {
     public void run() throws Exception {
         // System.out.println("Running\n");
         // TODO: hard-coded. will need to add command line parsing to extract port and host. 
-        newConnection("localhost", 1500);
+        // *** change this here to your server machine (testing)*** 
+        newConnection("ug164.eecg.utoronto.ca", 1500);
     }
 
     public static void main(String[] args) throws Exception {

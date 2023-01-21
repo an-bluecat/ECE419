@@ -1,13 +1,12 @@
 package client;
 
 import shared.messages.KVMessage;
-
+import shared.messages.KVMessageHandler;
 // import client.TextMessage;
 // import app_kvClient.TextMessage;
 import client.ClientSocketListener.SocketStatus;
 
 import org.apache.log4j.Logger;
-import org.json.simple.JSONObject;
 
 import java.net.Socket;
 import logger.LogSetup;
@@ -16,7 +15,6 @@ import java.util.Set;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.net.UnknownHostException;
 
 public class KVStore extends Thread implements KVCommInterface {
@@ -27,12 +25,13 @@ public class KVStore extends Thread implements KVCommInterface {
 	private Socket clientSocket;
 	private OutputStream output;
  	private InputStream input;
-	
-	private static final int BUFFER_SIZE = 1024;
-	private static final int DROP_SIZE = 1024 * BUFFER_SIZE;
+	private KVMessageHandler kvMessageHandler;
 	
 	String serverAddress;
 	int portNumber;
+
+	private static final int BUFFER_SIZE = 1024;
+	private static final int DROP_SIZE = 1024 * BUFFER_SIZE;
 
 	/**
 	 * Initialize KVStore with address and port of KVServer
@@ -40,7 +39,7 @@ public class KVStore extends Thread implements KVCommInterface {
 	 * @param port the port of the KVServer
 	 */
 	public KVStore(String address, int port) throws UnknownHostException, IOException {
-		// TODO Auto-generated method stub
+		// System.out.println("Constructing KVStore");
 		clientSocket = new Socket(address, port);
 		listeners = new HashSet<ClientSocketListener>();
 		setRunning(true);
@@ -54,7 +53,6 @@ public class KVStore extends Thread implements KVCommInterface {
 	 *             if connection could not be established.
 	 */
 	public void connect() throws Exception{
-		// TODO Auto-generated method stub
 		// System.out.println("Connect\n");
 		try {
 			output = clientSocket.getOutputStream();
@@ -214,28 +212,20 @@ public class KVStore extends Thread implements KVCommInterface {
 
 	@Override
 	public KVMessage put(String key, String value) throws Exception {
-		// code curtesy: https://www.tutorialspoint.com/json/json_java_example.htm
-		JSONObject request = new JSONObject();
-		request.put(key, value);
-
-		StringWriter reqWritter = new StringWriter();
-		request.writeJSONString(reqWritter);
-
-		TextMessage reqText = new TextMessage(reqWritter.toString());
+		kvMessageHandler = new KVMessageHandler(key, value);
 
 		// sending request
 		try {	
-			sendMessage(reqText);
+			kvMessageHandler.sendKVRequest(clientSocket);
 		} catch (IOException e) {
 			logger.error("Request forwarding not successful");
 			System.exit(1);
 		}
 
-		// TextMessage response = new TextMessage();
 		// receiving response
 		try {
-			TextMessage response = receiveMessage();
-			return (KVMessage) response;
+			kvMessageHandler.receiveKVResponse();
+			return kvMessageHandler;
 		} catch (IOException e) {
 			logger.error("Response receiving not successful");
 			// TODO: message content checking
