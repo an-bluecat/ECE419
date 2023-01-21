@@ -212,7 +212,7 @@ public class KVStore extends Thread implements KVCommInterface {
 
 	@Override
 	public KVMessage put(String key, String value) throws Exception {
-		kvMessageHandler = new KVMessageHandler(key, value);
+		kvMessageHandler = new KVMessageHandler(key, value); //Message handler constructs json
 
 		// sending request
 		try {	
@@ -237,7 +237,23 @@ public class KVStore extends Thread implements KVCommInterface {
 	@Override
 	public KVMessage get(String key) throws Exception {
 		// constructing json data
+		// Format: json with key and value being "" indicates a get request
+		kvMessageHandler = new KVMessagehandler(key, "");
 
-		return null;
+		try {
+			kvMessageHandler.sendKVRequest(clientSocket);
+		} catch (IOException e) {
+			ogger.error("Request forwarding not successful");
+			System.exit(1);
+		}
+		
+		try {
+			kvMessageHandler.receiveKVResponse();
+			return kvMessageHandler;
+		} catch (IOException e) {
+			logger.error("Response receiving not successful");
+			System.exit(1);
+		}
+ 		return null;
 	}
 }
