@@ -49,11 +49,8 @@ public class KVStore extends Thread implements KVCommInterface {
 	 *             if connection could not be established.
 	 */
 	public void connect() throws Exception{
-
-	}
-	
-	public void run() {
 		// TODO Auto-generated method stub
+		// System.out.println("Connect\n");
 		try {
 			output = clientSocket.getOutputStream();
 			input = clientSocket.getInputStream();
@@ -86,7 +83,7 @@ public class KVStore extends Thread implements KVCommInterface {
 				closeConnection();
 			}
 		}
-	}	
+	}
 
 	public void addListener(ClientSocketListener listener){
 		listeners.add(listener);
@@ -215,8 +212,4 @@ public class KVStore extends Thread implements KVCommInterface {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	// public static void main(String[] args) {
-	// 	return ;
-	// }
 }

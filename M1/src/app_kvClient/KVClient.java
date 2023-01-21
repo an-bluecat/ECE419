@@ -1,6 +1,8 @@
 package app_kvClient;
 
 import client.KVCommInterface;
+import client.KVStore;
+import org.apache.log4j.BasicConfigurator;
 
 public class KVClient implements IKVClient {
     @Override
@@ -14,7 +16,15 @@ public class KVClient implements IKVClient {
         return null;
     }
 
-    public static void main(String[] args) {
-        
+    public void run() throws Exception {
+        // System.out.println("Running\n");
+        KVStore kvCommStore = new KVStore("localhost", 1500);
+        kvCommStore.connect();
+    }
+
+    public static void main(String[] args) throws Exception {
+        BasicConfigurator.configure(); //or else log4j reports error: no appenders found
+        KVClient kvClient = new KVClient();
+        kvClient.run();
     }
 }
