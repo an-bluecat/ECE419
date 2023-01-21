@@ -5,22 +5,25 @@ import client.KVStore;
 import org.apache.log4j.BasicConfigurator;
 
 public class KVClient implements IKVClient {
+    KVStore kvCommStore;
+
     @Override
     public void newConnection(String hostname, int port) throws Exception{
         // TODO Auto-generated method stub
+        kvCommStore = new KVStore(hostname, port); 
+        kvCommStore.connect();
     }
 
     @Override
     public KVCommInterface getStore(){
         // TODO Auto-generated method stub
-        return null;
+        return kvCommStore;
     }
 
     public void run() throws Exception {
         // System.out.println("Running\n");
         // TODO: hard-coded. will need to add command line parsing to extract port and host. 
-        KVStore kvCommStore = new KVStore("localhost", 1500); 
-        kvCommStore.connect();
+        newConnection("localhost", 1500);
     }
 
     public static void main(String[] args) throws Exception {
