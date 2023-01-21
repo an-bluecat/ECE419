@@ -25,7 +25,7 @@ public class KVClient implements IKVClient {
         // System.out.println("Running\n");
         // TODO: hard-coded. will need to add command line parsing to extract port and host. 
         // *** change this here to your server machine (testing)*** 
-        newConnection("ug164.eecg.utoronto.ca", 1500);
+        newConnection("ug250.eecg.utoronto.ca", 1500);
     }
 
     public static void main(String[] args) throws Exception {

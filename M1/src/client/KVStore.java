@@ -238,15 +238,15 @@ public class KVStore extends Thread implements KVCommInterface {
 	public KVMessage get(String key) throws Exception {
 		// constructing json data
 		// Format: json with key and value being "" indicates a get request
-		kvMessageHandler = new KVMessagehandler(key, "");
+		kvMessageHandler = new KVMessageHandler(key, "");
 
 		try {
 			kvMessageHandler.sendKVRequest(clientSocket);
 		} catch (IOException e) {
-			ogger.error("Request forwarding not successful");
+			logger.error("Request forwarding not successful");
 			System.exit(1);
 		}
-		
+
 		try {
 			kvMessageHandler.receiveKVResponse();
 			return kvMessageHandler;

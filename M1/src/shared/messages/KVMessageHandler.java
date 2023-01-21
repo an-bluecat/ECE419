@@ -60,6 +60,7 @@ public class KVMessageHandler implements KVMessage {
 		input = this.clientSocket.getInputStream();
 
 		byte[] msgBytes = toByteArray(msg);
+		msgBytes = addCtrChars(msgBytes);
 		output.write(msgBytes, 0, msgBytes.length);
 		output.flush();
 		logger.info("Send message:\t '" + msg + "'");
@@ -119,6 +120,9 @@ public class KVMessageHandler implements KVMessage {
 		}
     }
 
+	/**
+	 * Given a sring, return a byte array after applying utf-8 encoding
+	 */
 	private byte[] toByteArray(String s){
 		byte[] bytes = s.getBytes();
 		byte[] ctrBytes = new byte[]{LINE_FEED, RETURN};
@@ -130,6 +134,16 @@ public class KVMessageHandler implements KVMessage {
 		return tmp;		
 	}
 
+	private byte[] addCtrChars(byte[] bytes) {
+		byte[] ctrBytes = new byte[]{LINE_FEED, RETURN};
+		byte[] tmp = new byte[bytes.length + ctrBytes.length];
+		
+		System.arraycopy(bytes, 0, tmp, 0, bytes.length);
+		System.arraycopy(ctrBytes, 0, tmp, bytes.length, ctrBytes.length);
+		
+		return tmp;		
+	}
+	
     /**
 	 * @return the key that is associated with this message, 
 	 * 		null if not key is associated.
