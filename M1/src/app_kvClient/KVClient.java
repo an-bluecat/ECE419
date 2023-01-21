@@ -13,4 +13,8 @@ public class KVClient implements IKVClient {
         // TODO Auto-generated method stub
         return null;
     }
+
+    public static void main(String[] args) {
+        
+    }
 }
