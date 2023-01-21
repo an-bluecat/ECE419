@@ -1,18 +1,23 @@
 package client;
 
-import java.net.Socket;
 import shared.messages.KVMessage;
-import client.TextMessage;
+
+// import client.TextMessage;
+// import app_kvClient.TextMessage;
+import client.ClientSocketListener.SocketStatus;
+
 import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
+
+import java.net.Socket;
 import logger.LogSetup;
 import java.util.HashSet;
 import java.util.Set;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.UnknownHostException;
-import client.ClientSocketListener.SocketStatus;
 import java.io.IOException;
-
+import java.io.StringWriter;
+import java.net.UnknownHostException;
 
 public class KVStore extends Thread implements KVCommInterface {
 	private Logger logger = Logger.getRootLogger();
@@ -104,78 +109,6 @@ public class KVStore extends Thread implements KVCommInterface {
 		}
 	}
 
-	/**
-	 * Method sends a TextMessage using this socket.
-	 * @param msg the message that is to be sent.
-	 * @throws IOException some I/O error regarding the output stream 
-	 */
-	public void sendMessage(TextMessage msg) throws IOException {
-		byte[] msgBytes = msg.getMsgBytes();
-		output.write(msgBytes, 0, msgBytes.length);
-		output.flush();
-		logger.info("Send message:\t '" + msg.getMsg() + "'");
-    }
-
-	private TextMessage receiveMessage() throws IOException {
-		
-		int index = 0;
-		byte[] msgBytes = null, tmp = null;
-		byte[] bufferBytes = new byte[BUFFER_SIZE];
-		
-		/* read first char from stream */
-		byte read = (byte) input.read();	
-		boolean reading = true;
-		
-		while(read != 13 && reading) {/* carriage return */
-			/* if buffer filled, copy to msg array */
-			if(index == BUFFER_SIZE) {
-				if(msgBytes == null){
-					tmp = new byte[BUFFER_SIZE];
-					System.arraycopy(bufferBytes, 0, tmp, 0, BUFFER_SIZE);
-				} else {
-					tmp = new byte[msgBytes.length + BUFFER_SIZE];
-					System.arraycopy(msgBytes, 0, tmp, 0, msgBytes.length);
-					System.arraycopy(bufferBytes, 0, tmp, msgBytes.length,
-							BUFFER_SIZE);
-				}
-
-				msgBytes = tmp;
-				bufferBytes = new byte[BUFFER_SIZE];
-				index = 0;
-			} 
-			
-			/* only read valid characters, i.e. letters and numbers */
-			if((read > 31 && read < 127)) {
-				bufferBytes[index] = read;
-				index++;
-			}
-			
-			/* stop reading is DROP_SIZE is reached */
-			if(msgBytes != null && msgBytes.length + index >= DROP_SIZE) {
-				reading = false;
-			}
-			
-			/* read next char from stream */
-			read = (byte) input.read();
-		}
-		
-		if(msgBytes == null){
-			tmp = new byte[index];
-			System.arraycopy(bufferBytes, 0, tmp, 0, index);
-		} else {
-			tmp = new byte[msgBytes.length + index];
-			System.arraycopy(msgBytes, 0, tmp, 0, msgBytes.length);
-			System.arraycopy(bufferBytes, 0, tmp, msgBytes.length, index);
-		}
-		
-		msgBytes = tmp;
-		
-		/* build final String */
-		TextMessage msg = new TextMessage(msgBytes);
-		logger.info("Receive message:\t '" + msg.getMsg() + "'");
-		return msg;
-    }
-
 	private void tearDownConnection() throws IOException {
 		setRunning(false);
 		logger.info("tearing down the connection ...");
@@ -198,18 +131,50 @@ public class KVStore extends Thread implements KVCommInterface {
 
 	@Override
 	public void disconnect() {
-		// TODO Auto-generated method stub
+		try {
+			tearDownConnection();
+		} catch (IOException e) { 
+			logger.error("connection unable to stop");
+			System.exit(1);
+		}
 	}
 
 	@Override
 	public KVMessage put(String key, String value) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		// code curtesy: https://www.tutorialspoint.com/json/json_java_example.htm
+		JSONObject request = new JSONObject();
+		request.put(key, value);
+
+		StringWriter reqWritter = new StringWriter();
+		request.writeJSONString(reqWritter);
+
+		TextMessage reqText = new TextMessage(reqWritter.toString());
+
+		// sending request
+		try {	
+			sendMessage(reqText);
+		} catch (IOException e) {
+			logger.error("Request forwarding not successful");
+			System.exit(1);
+		}
+
+		// TextMessage response = new TextMessage();
+		// receiving response
+		try {
+			TextMessage response = receiveMessage();
+			return (KVMessage) response;
+		} catch (IOException e) {
+			logger.error("Response receiving not successful");
+			// TODO: message content checking
+			System.exit(1);
+		}
+		return KVMessage();
 	}
 
 	@Override
 	public KVMessage get(String key) throws Exception {
-		// TODO Auto-generated method stub
+		// constructing json data
+
 		return null;
 	}
 }
