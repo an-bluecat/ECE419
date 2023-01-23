@@ -1,5 +1,8 @@
 package testing;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
+
 import org.junit.Test;
 
 import client.KVStore;
@@ -13,7 +16,15 @@ public class InteractionTest extends TestCase {
 	private KVStore kvClient;
 	
 	public void setUp() {
-		kvClient = new KVStore("localhost", 50000);
+		try {
+			kvClient = new KVStore("localhost", 50000);
+		} catch (UnknownHostException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try {
 			kvClient.connect();
 		} catch (Exception e) {
