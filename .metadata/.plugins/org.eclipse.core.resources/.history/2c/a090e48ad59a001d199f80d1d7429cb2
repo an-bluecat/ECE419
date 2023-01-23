@@ -32,8 +32,7 @@ public class AdditionalTest extends TestCase {
 			assertTrue(ex == null);
 		}
 		
-		// get: in a loop, query the inserted keys until 
-		// the limit is reached
+		// get
 		int limit = Math.round(scaler / itest * (100 - itest));
 		while (limit > 0) {
 			for (int ikey = 0; ikey <= scaler && limit > 0; ikey ++) {
@@ -50,15 +49,13 @@ public class AdditionalTest extends TestCase {
 		
 	}
 
+	@Test
 	/**
 	 * test for server performance: puts 80% VS 20% gets
-	 * 								puts 60% VS 40% gets
-	 * 								puts 40% VS 60% gets
-	 * 								puts 20% VS 80% gets
 	 */
-	public void testPerformance() {
+	public void performanceTest() {
 		for (int itest = 20; itest <= 80; itest += 20 ){
-			performanceTestHelper(itest, itest);
+			performanceTestHelper(itest);
 		}
 	}
 }

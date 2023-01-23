@@ -52,11 +52,9 @@ public class AdditionalTest extends TestCase {
 
 	/**
 	 * test for server performance: puts 80% VS 20% gets
-	 * 								puts 60% VS 40% gets
-	 * 								puts 40% VS 60% gets
-	 * 								puts 20% VS 80% gets
 	 */
-	public void testPerformance() {
+	@Test
+	public void Test performanceTest() {
 		for (int itest = 20; itest <= 80; itest += 20 ){
 			performanceTestHelper(itest, itest);
 		}

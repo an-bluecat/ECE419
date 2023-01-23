@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="ConnectionTest" project="M1" tests="3" started="3" failures="0" errors="0" ignored="0">
+  <testsuite name="testing.ConnectionTest" time="0.045">
+    <testcase name="testConnectionSuccess" classname="testing.ConnectionTest" time="0.006"/>
+    <testcase name="testUnknownHost" classname="testing.ConnectionTest" time="0.038"/>
+    <testcase name="testIllegalPort" classname="testing.ConnectionTest" time="0.001"/>
+  </testsuite>
+</testrun>
