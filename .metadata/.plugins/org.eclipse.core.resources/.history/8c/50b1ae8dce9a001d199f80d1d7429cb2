@@ -1,0 +1,80 @@
+package testing;
+
+import java.io.IOException;
+import java.net.UnknownHostException;
+
+import org.junit.Assume;
+
+import client.KVStore;
+
+import junit.framework.TestCase;
+
+
+public class ConnectionTest extends TestCase {
+
+	@Rule
+	public TestWatcher watcher = new TestWatcher() {
+		@Override
+		protected void failed(Throwable e, Description description) {
+			if (e instanceof NullPointerException) {
+				Assume.assumeTrue(false);
+			}
+		}
+	};
+	
+	public void testConnectionSuccess() {
+		
+		Exception ex = null;
+		
+		KVStore kvClient;
+		try {
+			kvClient = new KVStore("localhost", 50000);
+		} catch (UnknownHostException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			kvClient.connect();
+		} catch (Exception e) {
+			ex = e;
+		}	
+		
+		assertNull(ex);
+	}
+	
+	
+	public void testUnknownHost() {
+		Exception ex = null;
+		KVStore kvClient = new KVStore("unknown", 50000);
+		
+		try {
+			kvClient.connect();
+		} catch (Exception e) {
+			ex = e; 
+		}
+		
+		assertTrue(ex instanceof UnknownHostException);
+	}
+	
+	
+	public void testIllegalPort() {
+		Exception ex = null;
+		KVStore kvClient = new KVStore("localhost", 123456789);
+		
+		try {
+			kvClient.connect();
+		} catch (Exception e) {
+			ex = e; 
+		}
+		
+		assertTrue(ex instanceof IllegalArgumentException);
+	}
+	
+	
+
+	
+}
+

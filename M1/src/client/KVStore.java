@@ -20,7 +20,6 @@ import java.net.UnknownHostException;
 public class KVStore extends Thread implements KVCommInterface {
 	private Logger logger = Logger.getRootLogger();
 	private Set<ClientSocketListener> listeners;
-	private boolean running;
 	
 	private Socket clientSocket;
 	private OutputStream output;
@@ -38,11 +37,11 @@ public class KVStore extends Thread implements KVCommInterface {
 	 * @param address the address of the KVServer
 	 * @param port the port of the KVServer
 	 */
-	public KVStore(String address, int port) throws UnknownHostException, IOException {
+	public KVStore(String address, int port) {
 		// System.out.println("Constructing KVStore");
-		clientSocket = new Socket(address, port);
+		serverAddress = address;
+		portNumber = port;
 		listeners = new HashSet<ClientSocketListener>();
-		setRunning(true);
 		logger.info("Connection established");
 	}
 
@@ -53,39 +52,39 @@ public class KVStore extends Thread implements KVCommInterface {
 	 *             if connection could not be established.
 	 */
 	public void connect() throws Exception{
+		clientSocket = new Socket(serverAddress, portNumber);
+		
 		// System.out.println("Connect\n");
 		try {
 			output = clientSocket.getOutputStream();
 			input = clientSocket.getInputStream();
-			
-			while(isRunning()) {
-				try {
-					TextMessage latestMsg = receiveMessage();
-					for(ClientSocketListener listener : listeners) {
-						listener.handleNewMessage(latestMsg);
-					}
-				} catch (IOException ioe) {
-					if(isRunning()) {
-						logger.error("Connection lost!");
-						try {
-							tearDownConnection();
-							for(ClientSocketListener listener : listeners) {
-								listener.handleStatus(
-										SocketStatus.CONNECTION_LOST);
-							}
-						} catch (IOException e) {
-							logger.error("Unable to close connection!");
-						}
-					}
-				}				
-			}
-		} catch (IOException ioe) {
-			logger.error("Connection could not be established!");
-		} finally {
-			if(isRunning()) {
-				closeConnection();
-			}
 		}
+			
+//			while(isRunning()) {
+//				try {
+//					TextMessage latestMsg = receiveMessage();
+//					for(ClientSocketListener listener : listeners) {
+//						listener.handleNewMessage(latestMsg);
+//					}
+//				} catch (IOException ioe) {
+//					if(isRunning()) {
+//						logger.error("Connection lost!");
+//						try {
+//							tearDownConnection();
+//							for(ClientSocketListener listener : listeners) {
+//								listener.handleStatus(
+//										SocketStatus.CONNECTION_LOST);
+//							}
+//						} catch (IOException e) {
+//							logger.error("Unable to close connection!");
+//						}
+//					}
+//				}				
+//			}
+//		} 
+		catch (IOException ioe) {
+			logger.error("Connection could not be established!");
+		} 
 	}
 
 
@@ -181,7 +180,6 @@ public class KVStore extends Thread implements KVCommInterface {
 	}
 
 	private void tearDownConnection() throws IOException {
-		setRunning(false);
 		logger.info("tearing down the connection ...");
 		if (clientSocket != null) {
 			input.close();
@@ -192,13 +190,6 @@ public class KVStore extends Thread implements KVCommInterface {
 		}
 	}
 
-	public boolean isRunning() {
-		return running;
-	}
-
-	public void setRunning(boolean run) {
-		running = run;
-	}
 
 	@Override
 	public void disconnect() {

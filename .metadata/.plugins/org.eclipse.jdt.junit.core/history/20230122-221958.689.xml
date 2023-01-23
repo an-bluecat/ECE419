@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?><testrun name="InteractionTest" project="M1" tests="6" started="6" failures="5" errors="1" ignored="0">
-  <testsuite name="testing.InteractionTest" time="0.012">
-    <testcase name="testGet" classname="testing.InteractionTest" time="0.008">
+  <testsuite name="testing.InteractionTest" time="0.023">
+    <testcase name="testGet" classname="testing.InteractionTest" time="0.017">
       <failure>junit.framework.AssertionFailedError
 	at junit.framework.Assert.fail(Assert.java:55)
 	at junit.framework.Assert.assertTrue(Assert.java:22)
 	at junit.framework.Assert.assertTrue(Assert.java:31)
 	at junit.framework.TestCase.assertTrue(TestCase.java:200)
-	at testing.InteractionTest.testGet(InteractionTest.java:121)
+	at testing.InteractionTest.testGet(InteractionTest.java:129)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -35,7 +35,7 @@
 	at junit.framework.Assert.assertTrue(Assert.java:22)
 	at junit.framework.Assert.assertTrue(Assert.java:31)
 	at junit.framework.TestCase.assertTrue(TestCase.java:200)
-	at testing.InteractionTest.testPut(InteractionTest.java:48)
+	at testing.InteractionTest.testPut(InteractionTest.java:51)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -58,13 +58,13 @@
 
 </failure>
     </testcase>
-    <testcase name="testGetUnsetValue" classname="testing.InteractionTest" time="0.001">
+    <testcase name="testGetUnsetValue" classname="testing.InteractionTest" time="0.002">
       <failure>junit.framework.AssertionFailedError
 	at junit.framework.Assert.fail(Assert.java:55)
 	at junit.framework.Assert.assertTrue(Assert.java:22)
 	at junit.framework.Assert.assertTrue(Assert.java:31)
 	at junit.framework.TestCase.assertTrue(TestCase.java:200)
-	at testing.InteractionTest.testGetUnsetValue(InteractionTest.java:136)
+	at testing.InteractionTest.testGetUnsetValue(InteractionTest.java:144)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -89,13 +89,8 @@
     </testcase>
     <testcase name="testPutDisconnected" classname="testing.InteractionTest" time="0.001">
       <error>java.lang.NullPointerException: Cannot invoke "client.KVStore.disconnect()" because "this.kvClient" is null
-	at testing.InteractionTest.testPutDisconnected(InteractionTest.java:53)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
-	at junit.framework.TestCase.runTest(TestCase.java:177)
-	at junit.framework.TestCase.runBare(TestCase.java:142)
+	at testing.InteractionTest.tearDown(InteractionTest.java:34)
+	at junit.framework.TestCase.runBare(TestCase.java:147)
 	at junit.framework.TestResult$1.protect(TestResult.java:122)
 	at junit.framework.TestResult.runProtected(TestResult.java:142)
 	at junit.framework.TestResult.run(TestResult.java:125)
@@ -118,7 +113,7 @@
 	at junit.framework.Assert.assertTrue(Assert.java:22)
 	at junit.framework.Assert.assertTrue(Assert.java:31)
 	at junit.framework.TestCase.assertTrue(TestCase.java:200)
-	at testing.InteractionTest.testDelete(InteractionTest.java:104)
+	at testing.InteractionTest.testDelete(InteractionTest.java:112)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -141,13 +136,13 @@
 
 </failure>
     </testcase>
-    <testcase name="testUpdate" classname="testing.InteractionTest" time="0.0">
+    <testcase name="testUpdate" classname="testing.InteractionTest" time="0.001">
       <failure>junit.framework.AssertionFailedError
 	at junit.framework.Assert.fail(Assert.java:55)
 	at junit.framework.Assert.assertTrue(Assert.java:22)
 	at junit.framework.Assert.assertTrue(Assert.java:31)
 	at junit.framework.TestCase.assertTrue(TestCase.java:200)
-	at testing.InteractionTest.testUpdate(InteractionTest.java:84)
+	at testing.InteractionTest.testUpdate(InteractionTest.java:92)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

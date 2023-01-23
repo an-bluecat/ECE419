@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?><testrun name="InteractionTest.testUpdate" project="M1" tests="1" started="1" failures="0" errors="1" ignored="0">
-  <testcase name="testUpdate" classname="testing.InteractionTest" time="0.0">
-    <error>java.lang.Error: Unresolved compilation problems: 
+java.lang.Error: Unresolved compilation problems: 
 	Unhandled exception type UnknownHostException
 	Unhandled exception type IOException
 
-	at testing.InteractionTest.setUp(InteractionTest.java:16)
+	at testing.InteractionTest.setUp(InteractionTest.java:15)
 	at junit.framework.TestCase.runBare(TestCase.java:140)
 	at junit.framework.TestResult$1.protect(TestResult.java:122)
 	at junit.framework.TestResult.runProtected(TestResult.java:142)
@@ -20,6 +18,3 @@
 	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:464)
 	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:210)
 
-</error>
-  </testcase>
-</testrun>
