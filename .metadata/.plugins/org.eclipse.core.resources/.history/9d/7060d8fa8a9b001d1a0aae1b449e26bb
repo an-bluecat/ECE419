@@ -23,16 +23,15 @@ public class AdditionalTest extends TestCase {
 		}
 		assertTrue (er == null);
 		
-		String res = "";
+		String res =  "";
 		try {
-			res = server.getKV("testPutPath.txt");
+			res = server.getKV("testPutPath");
 		} catch (Exception e) {
 			er = e;
 		}
 		assertTrue (er == null);
-//		assertTrue (res == "");
 		System.out.printf(res);
-		assertEquals (res, "file key content");
+		assertTrue (res == "file key content");
 	}
 	
 	/**
@@ -67,7 +66,7 @@ public class AdditionalTest extends TestCase {
 			for (int ikey = 0; ikey <= scaler && limit > 0; ikey ++) {
 				Exception ex = null;
 				try {
-					server.getKV(Integer.toString(ikey) + ".txt");
+					server.getKV(Integer.toString(ikey));
 				} catch (Exception e) {
 					ex = e;
 				}

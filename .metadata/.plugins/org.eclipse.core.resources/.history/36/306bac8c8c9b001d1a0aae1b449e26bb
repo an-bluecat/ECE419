@@ -32,7 +32,7 @@ public class AdditionalTest extends TestCase {
 		assertTrue (er == null);
 //		assertTrue (res == "");
 		System.out.printf(res);
-		assertEquals (res, "file key content");
+		assertTrue (res == "file key content");
 	}
 	
 	/**

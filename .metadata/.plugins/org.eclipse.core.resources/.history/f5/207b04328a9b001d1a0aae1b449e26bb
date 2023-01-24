@@ -10,31 +10,15 @@ public class AdditionalTest extends TestCase {
 	
 	// TODO add your test cases, at least 3
 		
-		/**
-		 * test that the inserted value is what got returned by get of same key
-		 */
+	
 	public void testPutPath() {
-		Exception er = null;
 		KVServer server = new KVServer(5000);
 		try {
-			server.putKV("testPutPath", "file key content");
+			server.putKV("..", "kvPut test error");
 		}  catch (Exception e) {
-			er = e;
+			e.printStackTrace();
 		}
-		assertTrue (er == null);
-		
-		String res = "";
-		try {
-			res = server.getKV("testPutPath.txt");
-		} catch (Exception e) {
-			er = e;
-		}
-		assertTrue (er == null);
-//		assertTrue (res == "");
-		System.out.printf(res);
-		assertEquals (res, "file key content");
 	}
-	
 	/**
 	 * helper for re-usable code  in performance test
 	 * 
@@ -67,7 +51,7 @@ public class AdditionalTest extends TestCase {
 			for (int ikey = 0; ikey <= scaler && limit > 0; ikey ++) {
 				Exception ex = null;
 				try {
-					server.getKV(Integer.toString(ikey) + ".txt");
+					server.getKV(Integer.toString(ikey));
 				} catch (Exception e) {
 					ex = e;
 				}
