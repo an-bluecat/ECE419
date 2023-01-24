@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="AdditionalTest.performanceTestHelper(int, int, String)" project="M1" tests="1" started="1" failures="0" errors="1" ignored="0">
+  <testcase name="initializationError" classname="org.junit.runner.manipulation.Filter" time="0.001">
+    <error>java.lang.Exception: No tests found matching [{ExactMatcher:fDisplayName=performanceTestHelper(int, int, java.lang.String)], {LeadingIdentifierMatcher:fClassName=testing.AdditionalTest,fLeadingIdentifier=performanceTestHelper]] from org.junit.internal.requests.ClassRequest@578486a3
+	at org.junit.internal.requests.FilterRequest.getRunner(FilterRequest.java:40)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader.createFilteredTest(JUnit4TestLoader.java:83)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader.createTest(JUnit4TestLoader.java:74)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader.loadTests(JUnit4TestLoader.java:49)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:526)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:770)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:464)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:210)
+
+</error>
+  </testcase>
+</testrun>
