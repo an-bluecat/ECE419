@@ -14,6 +14,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 
+
 import logger.LogSetup;
 
 import org.apache.log4j.Level;
@@ -120,7 +121,7 @@ public class KVServer extends Thread implements IKVServer  {
 	@Override
     public String getHostname(){
 		// TODO Auto-generated method stub
-		return null;
+		return this.serverSocket.getInetAddress().getHostName(); 
 	}
 
 	@Override
@@ -138,7 +139,14 @@ public class KVServer extends Thread implements IKVServer  {
 	@Override
     public boolean inStorage(String key){
 		// TODO Auto-generated method stub
-		return false;
+
+		File file = new File(STORAGE_DIRECTORY + "/" + key);
+		if (file.exists()) {
+			return true;
+		}else{
+			return false;
+		}
+
 	}
 
 	@Override
