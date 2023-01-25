@@ -1,15 +1,14 @@
 package shared.messages;
 
-import shared.messages.KVMessage;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.Socket;
-import logger.LogSetup;
-import java.io.IOException;
 import java.io.StringWriter;
-import org.json.simple.JSONObject;
+import java.net.Socket;
 
 import org.apache.log4j.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class KVMessageHandler implements KVMessage {
 	private Logger logger = Logger.getRootLogger();
@@ -37,16 +36,20 @@ public class KVMessageHandler implements KVMessage {
 
 		// code curtesy: https://www.tutorialspoint.com/json/json_java_example.htm
 		JSONObject request = new JSONObject();
-		request.put(key, value);
-
-		StringWriter reqWritter = new StringWriter();
 		try {
-			request.writeJSONString(reqWritter);
-		} catch (IOException e) {
-			logger.error("Unable to initailize KVMessageHandler");
+			request.put(key, value);
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
+//
+//		StringWriter reqWritter = new StringWriter();
+//		try {
+//			request.writeJSONString(reqWritter);
+//		} catch (IOException e) {
+//			logger.error("Unable to initailize KVMessageHandler");
+//		}
 
-		msg = reqWritter.toString();
+		msg = request.toString();
 	}
 
 	/**

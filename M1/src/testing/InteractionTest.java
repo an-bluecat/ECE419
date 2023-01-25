@@ -15,14 +15,10 @@ public class InteractionTest extends TestCase {
 
 	private KVStore kvClient;
 	
-	public void setUp() {
-		try {
-			kvClient = new KVStore("ug250.eecg.utoronto.ca", 50000);
-		} catch (UnknownHostException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+	public void setUp() throws UnknownHostException, IOException {
+
+		kvClient = new KVStore("ug211.eecg.utoronto.ca", 2000);
+		
 		try {
 			kvClient.connect();
 		} catch (Exception e) {
@@ -119,12 +115,13 @@ public class InteractionTest extends TestCase {
 		KVMessage response = null;
 		Exception ex = null;
 
-			try {
-				kvClient.put(key, value);
-				response = kvClient.get(key);
-			} catch (Exception e) {
-				ex = e;
-			}
+		try {
+			kvClient.put(key, value);
+			response = kvClient.get(key);
+		} catch (Exception e) {
+			ex = e;
+			e.printStackTrace();
+		}
 		
 		assertTrue(ex == null && response.getValue().equals("bar"));
 	}

@@ -54,7 +54,7 @@ public class KVStore extends Thread implements KVCommInterface {
 	public void connect() throws Exception{
 		clientSocket = new Socket(serverAddress, portNumber);
 		
-		// System.out.println("Connect\n");
+		System.out.println("Connect\n");
 		try {
 			output = clientSocket.getOutputStream();
 			input = clientSocket.getInputStream();
@@ -83,6 +83,7 @@ public class KVStore extends Thread implements KVCommInterface {
 //			}
 //		} 
 		catch (IOException ioe) {
+			System.out.printf("Not connected!!!");
 			logger.error("Connection could not be established!");
 		} 
 	}
@@ -203,6 +204,7 @@ public class KVStore extends Thread implements KVCommInterface {
 
 	@Override
 	public KVMessage put(String key, String value) throws Exception {
+		System.out.printf("putting");
 		kvMessageHandler = new KVMessageHandler(key, value); //Message handler constructs json
 
 		// sending request
@@ -212,16 +214,19 @@ public class KVStore extends Thread implements KVCommInterface {
 			logger.error("Request forwarding not successful");
 			System.exit(1);
 		}
-
+		System.out.printf("System sending finished" );
 		// receiving response
 		try {
 			kvMessageHandler.receiveKVResponse();
+			System.out.printf("Putting finished");
 			return kvMessageHandler;
 		} catch (IOException e) {
+			System.out.printf("putting failed with exception");
 			logger.error("Response receiving not successful");
 			// TODO: message content checking
 			System.exit(1);
 		}
+		System.out.printf("putting failed");
 		return null;
 	}
 

@@ -9,6 +9,12 @@
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
+/bin/
+/storage
+
+/.nfs*
+.metadata/*
+
 
 # Package Files #
 *.jar
