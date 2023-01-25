@@ -35,7 +35,10 @@ hs_err_pid*
 .project
 
 # metadata files
-.metadata
+../.metadata/*
+
+# png files
+**/*.png
 
 # index files
 .indexes

@@ -71,7 +71,7 @@ public class Application implements ClientSocketListener {
 			
 		} else  if (tokens[0].equals("send")) {
 			if(tokens.length >= 2) {
-				if(client != null && client.isRunning()){
+				if(client != null){
 					StringBuilder msg = new StringBuilder();
 					for(int i = 1; i < tokens.length; i++) {
 						msg.append(tokens[i]);
