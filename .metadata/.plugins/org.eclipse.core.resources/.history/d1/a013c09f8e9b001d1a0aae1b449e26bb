@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import junit.framework.TestCase;
 import app_kvServer.KVServer;
-//import app_kvClient.KVClient;
+// import //app_kvClient.KVClient;
 import java.util.ArrayList;
 
 public class AdditionalTest extends TestCase {
@@ -34,12 +34,13 @@ public class AdditionalTest extends TestCase {
 		assertEquals (res, "file key content");
 	}
 	
-//	
-//	public void testCommunicationModule() {
-//		KVClient client = new KVClient();
-//		
-//		client.
-//	}
+		/**
+		 * testing of client interface
+		 */
+	public void testCommandInput() {
+		KVClient client = new KVClient();
+		
+	}
 	
 	/**
 	 * helper for re-usable code  in performance test

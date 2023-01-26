@@ -119,14 +119,11 @@
 // 		}
 // 	}
 	
-// 	private void sendMessage(String msg){
-// 		try {
-// 			client.sendMessage(new TextMessage(msg));
-// 		} catch (IOException e) {
-// 			printError("Unable to send message!");
-// 			disconnect();
-// 		}
-// 	}
+	// private void sendMessage(String msg){sendMessage
+	// 		printError("Unable to send message!");
+	// 		disconnect();
+	// 	}
+	// }
 
 // 	private void connect(String address, int port) 
 // 			throws UnknownHostException, IOException {
@@ -229,20 +226,21 @@
 // 		System.out.println(PROMPT + "Error! " +  error);
 // 	}
 	
-//     /**
-//      * Main entry point for the echo server application. 
-//      * @param args contains the port number at args[0].
-//      */
-//     public static void main(String[] args) {
-//     	try {
-// 			new LogSetup("logs/client.log", Level.OFF);
-// 			Application app = new Application();
-// 			app.run();
-// 		} catch (IOException e) {
-// 			System.out.println("Error! Unable to initialize logger!");
-// 			e.printStackTrace();
-// 			System.exit(1);
-// 		}
-//     }
+    /**
+     * Main entry point for the echo server application. 
+     * @param args contains the port number at args[0].
+     */
+    // public static void main(String[] args) {
+	// 	System.out.printf("runing application");
+    // 	try {
+	// 		new LogSetup("logs/client.log", Level.OFF);
+	// 		Application app = new Application();
+	// 		app.run();
+	// 	} catch (IOException e) {
+	// 		System.out.println("Error! Unable to initialize logger!");
+	// 		e.printStackTrace();
+	// 		System.exit(1);
+	// 	}
+    // }
 
 // }
