@@ -240,7 +240,8 @@ public class KVStore extends Thread implements KVCommInterface {
 	@Override
 	public KVMessage put(String key, String value) throws Exception {
 		System.out.printf("putting");
-		kvMessageHandler = new KVMessageHandler(key, value); //Message handler constructs json
+		String command = "put";
+		kvMessageHandler = new KVMessageHandler(command, key, value); //Message handler constructs json
 
 		// sending request
 		try {	
@@ -269,7 +270,8 @@ public class KVStore extends Thread implements KVCommInterface {
 	public KVMessage get(String key) throws Exception {
 		// constructing json data
 		// Format: json with key and value being "" indicates a get request
-		kvMessageHandler = new KVMessageHandler(key, "");
+		String command = "get";
+		kvMessageHandler = new KVMessageHandler(command, key, "");
 
 		try {
 			kvMessageHandler.sendKVRequest(clientSocket);

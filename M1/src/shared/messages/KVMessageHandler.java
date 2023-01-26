@@ -30,14 +30,16 @@ public class KVMessageHandler implements KVMessage {
 	/**
 	 * given a key-value pair, initialize the message field
 	 */
-	public KVMessageHandler(String k, String v) {
+	public KVMessageHandler(String command, String k, String v) {
 		key = k;
 		value = v;
 
 		// code curtesy: https://www.tutorialspoint.com/json/json_java_example.htm
 		JSONObject request = new JSONObject();
 		try {
-			request.put(key, value);
+			request.put("command", command);
+			request.put("key", key);
+			request.put("value", value);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
