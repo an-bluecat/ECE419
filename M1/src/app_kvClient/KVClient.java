@@ -1,8 +1,14 @@
 package app_kvClient;
 
+import java.io.IOException;
+
 import client.KVCommInterface;
 import client.KVStore;
 import org.apache.log4j.BasicConfigurator;
+import ui.Application;
+import logger.LogSetup;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 public class KVClient implements IKVClient {
     KVStore kvCommStore;
@@ -25,7 +31,17 @@ public class KVClient implements IKVClient {
         // System.out.println("Running\n");
         // TODO: hard-coded. will need to add command line parsing to extract port and host. 
         // *** change this here to your server machine (testing)*** 
-        newConnection("ug250.eecg.utoronto.ca", 1500);
+        // newConnection("ug241.eecg.utoronto.ca", 1500);
+
+        try {
+			new LogSetup("logs/client.log", Level.OFF);
+			Application app = new Application();
+			app.run();
+		} catch (IOException e) {
+			System.out.println("Error! Unable to initialize logger!");
+			e.printStackTrace();
+			System.exit(1);
+		}
     }
 
     public static void main(String[] args) throws Exception {
