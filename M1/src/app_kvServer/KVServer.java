@@ -187,6 +187,7 @@ public class KVServer extends Thread implements IKVServer  {
 		FileWriter fileWriter = new FileWriter(file, false); // false for overwrite mode
 		fileWriter.write(value);
 		fileWriter.close();
+		logger.info("put completed");
 
 		// // if file is created add the key to the index file
 		// if (isFileCreated) {

@@ -54,3 +54,9 @@ storage/*
 
 # .project
 .project
+
+# .classpath
+.classpath
+
+# .factorypath
+.factorypath
