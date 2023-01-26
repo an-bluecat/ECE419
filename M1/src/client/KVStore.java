@@ -46,27 +46,27 @@ public class KVStore extends Thread implements KVCommInterface {
 	 * @param address the address of the KVServer
 	 * @param port the port of the KVServer
 	 */
-	public KVStore(String address, int port) {
-		System.out.println("Constructing KVStore");
-		serverAddress = address;
-		portNumber = port;
-		listeners = new HashSet<ClientSocketListener>();
-		logger.info("Connection established");
-
-		// clientSocket = new Socket(address, port);
-		// listeners = new HashSet<ClientSocketListener>();
-		// setRunning(true);
-		// logger.info("Connection established");
-	}
-
-	// public KVStore(String address, int port) 
-	// 		throws UnknownHostException, IOException {
-		
-	// 	clientSocket = new Socket(address, port);
+	// public KVStore(String address, int port) {
+	// 	System.out.println("Constructing KVStore");
+	// 	serverAddress = address;
+	// 	portNumber = port;
 	// 	listeners = new HashSet<ClientSocketListener>();
-	// 	setRunning(true);
 	// 	logger.info("Connection established");
+
+	// 	// clientSocket = new Socket(address, port);
+	// 	// listeners = new HashSet<ClientSocketListener>();
+	// 	// setRunning(true);
+	// 	// logger.info("Connection established");
 	// }
+
+	public KVStore(String address, int port) 
+			throws UnknownHostException, IOException {
+		
+		clientSocket = new Socket(address, port);
+		listeners = new HashSet<ClientSocketListener>();
+		setRunning(true);
+		logger.info("Connection established");
+	}
 
 	/**
 	 * Establishes a connection to the KV Server.
@@ -191,6 +191,15 @@ public class KVStore extends Thread implements KVCommInterface {
 		listeners.add(listener);
 	}
 
+	public boolean isRunning() {
+		return running;
+	}
+	
+	public void setRunning(boolean run) {
+		running = run;
+	}
+	
+
 	public synchronized void closeConnection() {
 		// close the input and output sides of the socket
 
@@ -279,9 +288,6 @@ public class KVStore extends Thread implements KVCommInterface {
  		return null;
 	}
 
-	public boolean isRunning() {
-		return running;
-	}
 
 	public void run() {
 		try {
