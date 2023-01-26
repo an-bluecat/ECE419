@@ -8,6 +8,11 @@ import java.net.Socket;
 import client.TextMessage;
 import org.apache.log4j.*;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import app_kvServer.KVServer;
+
 
 /**
  * Represents a connection end point for a particular client that is 
@@ -27,6 +32,7 @@ public class ClientConnection implements Runnable {
 	private Socket clientSocket;
 	private InputStream input;
 	private OutputStream output;
+	private KVServer kvServer;
 	
 	/**
 	 * Constructs a new CientConnection object for a given TCP socket.
@@ -35,6 +41,8 @@ public class ClientConnection implements Runnable {
 	public ClientConnection(Socket clientSocket) {
 		this.clientSocket = clientSocket;
 		this.isOpen = true;
+		this.kvServer = kvServer;
+
 	}
 	
 	/**
@@ -54,7 +62,53 @@ public class ClientConnection implements Runnable {
 			while(isOpen) {
 				try {
 					TextMessage latestMsg = receiveMessage();
-					sendMessage(latestMsg);
+					// see if it's a json object. If so, then this is get/put request
+					try {
+						logger.info("json object parsing\n");
+						JSONObject json = new JSONObject(latestMsg);
+						logger.info("json object parsed\n");
+						String command = json.getString("command");
+						String key = json.getString("key");
+						String value = json.getString("value");
+
+						// if command is get, then call get method
+						if (command.equals("get")) {
+							try{
+							String result = this.kvServer.getKV(key);
+							// if result is null, then key does not exist
+							if (result == null) {
+								logger.info("no result found\n");
+								sendMessage(new TextMessage("not in storage"));
+
+							} else {
+								logger.info("result is " + result + "\n");
+								sendMessage(new TextMessage(result));
+							}}
+							catch(Exception e){
+								sendMessage(new TextMessage("get function failed"));
+							}
+						} else if (command.equals("put")) {
+							// if command is put, then call put method
+							try{
+								this.kvServer.putKV(key, value);
+							}catch(Exception e){
+								sendMessage(new TextMessage("put function failed"));
+							}
+							
+							// if result is null, then key does not exist
+							// if (result == null) {
+							// 	sendMessage(new TextMessage("null"));
+							// } else {
+							// 	sendMessage(new TextMessage(result));
+							// }
+						}
+
+					} catch (JSONException e) {
+						logger.info("not a json object\n");
+						sendMessage(latestMsg);
+					}
+
+					
 					
 				/* connection either terminated by the client or lost due to 
 				 * network problems*/	
