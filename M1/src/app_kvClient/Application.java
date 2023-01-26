@@ -1,3 +1,5 @@
+
+
 package ui;
 
 import java.io.BufferedReader;
@@ -31,7 +33,7 @@ public class Application implements ClientSocketListener {
 			stdin = new BufferedReader(new InputStreamReader(System.in));
 			System.out.print(PROMPT);
 
-			System.out.print("Enter command in Application");
+			System.out.print("Enter command in Application\n");
 			
 			try {
 				String cmdLine = stdin.readLine();
@@ -44,7 +46,7 @@ public class Application implements ClientSocketListener {
 	}
 	
 	private void handleCommand(String cmdLine) {
-		System.out.print("handling Command");
+		System.out.print("handling Command\n");
 		String[] tokens = cmdLine.split("\\s+");
 
 		if(tokens[0].equals("quit")) {	
