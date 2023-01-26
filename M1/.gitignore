@@ -45,3 +45,12 @@ hs_err_pid*
 
 # storage
 storage/*
+
+# nfs
+.nfs*
+
+# eclipse
+*.pydevproject
+
+# .project
+.project
