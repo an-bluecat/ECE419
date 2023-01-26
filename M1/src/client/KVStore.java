@@ -7,12 +7,13 @@ import shared.messages.KVMessageHandler;
 import client.ClientSocketListener.SocketStatus;
 
 import org.apache.log4j.Logger;
-
+import java.io.BufferedReader;
 import java.net.Socket;
 import logger.LogSetup;
 import java.util.HashSet;
 import java.util.Set;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -29,6 +30,14 @@ public class KVStore extends Thread implements KVCommInterface {
 	String serverAddress;
 	int portNumber;
 
+
+	private boolean running;
+
+	private boolean stop = false;
+	private BufferedReader stdin;
+	private static final String PROMPT = "EchoClient> ";
+	private int serverPort;
+
 	private static final int BUFFER_SIZE = 1024;
 	private static final int DROP_SIZE = 1024 * BUFFER_SIZE;
 
@@ -38,12 +47,26 @@ public class KVStore extends Thread implements KVCommInterface {
 	 * @param port the port of the KVServer
 	 */
 	public KVStore(String address, int port) {
-		// System.out.println("Constructing KVStore");
+		System.out.println("Constructing KVStore");
 		serverAddress = address;
 		portNumber = port;
 		listeners = new HashSet<ClientSocketListener>();
 		logger.info("Connection established");
+
+		// clientSocket = new Socket(address, port);
+		// listeners = new HashSet<ClientSocketListener>();
+		// setRunning(true);
+		// logger.info("Connection established");
 	}
+
+	// public KVStore(String address, int port) 
+	// 		throws UnknownHostException, IOException {
+		
+	// 	clientSocket = new Socket(address, port);
+	// 	listeners = new HashSet<ClientSocketListener>();
+	// 	setRunning(true);
+	// 	logger.info("Connection established");
+	// }
 
 	/**
 	 * Establishes a connection to the KV Server.
@@ -51,6 +74,7 @@ public class KVStore extends Thread implements KVCommInterface {
 	 * @throws Exception
 	 *             if connection could not be established.
 	 */
+
 	public void connect() throws Exception{
 		clientSocket = new Socket(serverAddress, portNumber);
 		
@@ -94,6 +118,8 @@ public class KVStore extends Thread implements KVCommInterface {
 	 * @param msg the message that is to be sent.
 	 * @throws IOException some I/O error regarding the output stream 
 	 */
+
+	
 	public void sendMessage(TextMessage msg) throws IOException {
 		byte[] msgBytes = msg.getMsgBytes();
 		output.write(msgBytes, 0, msgBytes.length);
@@ -252,4 +278,47 @@ public class KVStore extends Thread implements KVCommInterface {
 		}
  		return null;
 	}
+
+	public boolean isRunning() {
+		return running;
+	}
+
+	public void run() {
+		try {
+			output = clientSocket.getOutputStream();
+			input = clientSocket.getInputStream();
+			
+			while(isRunning()) {
+				try {
+					TextMessage latestMsg = receiveMessage();
+					for(ClientSocketListener listener : listeners) {
+						listener.handleNewMessage(latestMsg);
+					}
+				} catch (IOException ioe) {
+					if(isRunning()) {
+						logger.error("Connection lost!");
+						try {
+							tearDownConnection();
+							for(ClientSocketListener listener : listeners) {
+								listener.handleStatus(
+										SocketStatus.CONNECTION_LOST);
+							}
+						} catch (IOException e) {
+							logger.error("Unable to close connection!");
+						}
+					}
+				}				
+			}
+		} catch (IOException ioe) {
+			logger.error("Connection could not be established!");
+			
+		} finally {
+			if(isRunning()) {
+				closeConnection();
+			}
+		}
+	}
+
+
+
 }
