@@ -74,7 +74,36 @@ public class Application implements ClientSocketListener {
 				printError("Invalid number of parameters!");
 			}
 			
-		} else  if (tokens[0].equals("send")) {
+		} else if (tokens[0].equals("get")) {
+			if(tokens.length == 2) {
+				if(client != null){
+					try {
+                		client.get(tokens[1]);
+					} catch (Exception e) {
+						printError("An error occurred while trying to get the value: " + e.getMessage());
+					}
+				} else {
+					printError("Not connected!");
+				}
+			} else {
+				printError("get command has to be 2 parameters!");
+			}
+			
+		} else if (tokens[0].equals("put")) {
+			if(tokens.length == 3) {
+				if(client != null){
+					try {
+                		client.put(tokens[1], tokens[2]);
+					} catch (Exception e) {
+						printError("An error occurred while trying to put the value: " + e.getMessage());
+					}
+				} else {
+					printError("Not connected!");
+				}
+			} else {
+				printError("put command has to be 3 parameters!");
+			}
+		}else if (tokens[0].equals("send")) {
 			if(tokens.length >= 2) {
 				if(client != null){
 					StringBuilder msg = new StringBuilder();
