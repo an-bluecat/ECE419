@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.Socket;
+import java.nio.charset.*;
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
@@ -18,7 +19,9 @@ public class KVMessageHandler implements KVMessage {
 	
 	private OutputStream output;
 	private InputStream input;
-	private String msg;
+
+	private byte[] responseBytes = null; 
+	private String responseString = null;
 	private Socket clientSocket;
 
 	private static final int BUFFER_SIZE = 1024;
@@ -51,7 +54,7 @@ public class KVMessageHandler implements KVMessage {
 //			logger.error("Unable to initailize KVMessageHandler");
 //		}
 
-		msg = request.toString();
+		this.responseString = request.toString();
 	}
 
 	/**
@@ -64,11 +67,11 @@ public class KVMessageHandler implements KVMessage {
 		output = this.clientSocket.getOutputStream();
 		input = this.clientSocket.getInputStream();
 
-		byte[] msgBytes = toByteArray(msg);
+		byte[] msgBytes = toByteArray(this.responseString);
 		msgBytes = addCtrChars(msgBytes);
 		output.write(msgBytes, 0, msgBytes.length);
 		output.flush();
-		logger.info("Send message:\t '" + msg + "'");
+		logger.info("Send message:\t '" + this.responseString + "'");
     }
 
 
@@ -123,6 +126,9 @@ public class KVMessageHandler implements KVMessage {
 			System.arraycopy(msgBytes, 0, tmp, 0, msgBytes.length);
 			System.arraycopy(bufferBytes, 0, tmp, msgBytes.length, index);
 		}
+		this.responseBytes = tmp;
+		this.responseString = new String(responseBytes, StandardCharsets.UTF_8);
+		System.out.println("Wish it's Minghao: " + this.responseString);
     }
 
 	/**
@@ -173,4 +179,11 @@ public class KVMessageHandler implements KVMessage {
 		return status;
 	}
 
+	public String getResponseString() {
+		return responseString;
+	}
+
+	public byte[] getResponseByte() {
+		return responseBytes;
+	}
 }

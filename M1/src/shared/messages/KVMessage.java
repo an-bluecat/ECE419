@@ -1,7 +1,7 @@
 package shared.messages;
 
 public interface KVMessage {
-	
+
 	public enum StatusType {
 		GET, 			/* Get - request */
 		GET_ERROR, 		/* requested tuple (i.e. value) not found */
@@ -32,6 +32,9 @@ public interface KVMessage {
 	 */
 	public StatusType getStatus();
 	
+	public String getResponseString();
+
+	public byte[] getResponseByte();
 }
 
 

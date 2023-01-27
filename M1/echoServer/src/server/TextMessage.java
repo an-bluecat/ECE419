@@ -2,12 +2,14 @@ package server;
 
 import java.io.Serializable;
 
+import org.apache.log4j.*;
+
 /**
  * Represents a simple text message, which is intended to be received and sent 
  * by the server.
  */
 public class TextMessage implements Serializable {
-
+	private static Logger logger = Logger.getRootLogger();
 	private static final long serialVersionUID = 5549512212003782618L;
 	private String msg;
 	private byte[] msgBytes;
@@ -21,8 +23,11 @@ public class TextMessage implements Serializable {
      * @param bytes the bytes that form the message in ASCII coding.
      */
 	public TextMessage(byte[] bytes) {
+		logger.info("inside textMessage, bytes : " + bytes);
 		this.msgBytes = addCtrChars(bytes);
+		logger.info("inside textMessage, msgBytes : " + msgBytes);
 		this.msg = new String(msgBytes);
+		logger.info("inside textMessage, string : " + msg);
 	}
 	
 	/**

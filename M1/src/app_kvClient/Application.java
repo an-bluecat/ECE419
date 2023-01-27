@@ -1,6 +1,6 @@
 
 
-package ui;
+package app_kvClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,6 +15,8 @@ import logger.LogSetup;
 import client.KVStore;
 import client.ClientSocketListener;
 import client.TextMessage;
+import shared.messages.KVMessage;
+// import shared.messages.KVMessageHandler;
 // import javafx.application.Application;
 
 public class Application implements ClientSocketListener {
@@ -78,7 +80,8 @@ public class Application implements ClientSocketListener {
 			if(tokens.length == 2) {
 				if(client != null){
 					try {
-                		client.get(tokens[1]);
+                		KVMessage handler = client.get(tokens[1]);
+						System.out.println("Server Response: " + handler.getResponseString());
 					} catch (Exception e) {
 						printError("An error occurred while trying to get the value: " + e.getMessage());
 					}
