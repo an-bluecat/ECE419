@@ -13,15 +13,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-
-
 import logger.LogSetup;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-
-
-
 
 public class KVServer extends Thread implements IKVServer  {
 	/**
@@ -49,6 +44,7 @@ public class KVServer extends Thread implements IKVServer  {
 
 	public KVServer(int port, int cacheSize, String strategy) {
 		// TODO Auto-generated method stub
+
 	}
 
 	/**
@@ -65,7 +61,7 @@ public class KVServer extends Thread implements IKVServer  {
 	            try {
 	                Socket client = serverSocket.accept();                
 	                ClientConnection connection = 
-	                		new ClientConnection(client);
+	                		new ClientConnection(client, port);
 	                new Thread(connection).start();
 	                
 	                logger.info("Connected to " 
@@ -157,7 +153,7 @@ public class KVServer extends Thread implements IKVServer  {
 
 	@Override
     public String getKV(String key) throws Exception{
-		File file = new File(STORAGE_DIRECTORY + "/" + key);
+		File file = new File(STORAGE_DIRECTORY + "/" + key + ".txt");
 		if (!file.exists()) {
 			return null;
 		}
@@ -175,17 +171,24 @@ public class KVServer extends Thread implements IKVServer  {
 		// add the key to the index file ?
 		// create a new file with the key as the name under the storage directory or update if already exists
 		
+		System.out.printf("wthin put\n");
+
 		File file = new File(STORAGE_DIRECTORY + "/" + key + ".txt");
 		boolean isFileCreated = true;
+		System.out.printf("after creating File()");
+
 		if (file.exists()) {
 			isFileCreated = false;
 		} else {
 			isFileCreated = file.createNewFile();
 		}
 
+		System.out.printf("out of if else");
+
 		// write the value to the file
 		FileWriter fileWriter = new FileWriter(file, false); // false for overwrite mode
 		fileWriter.write(value);
+		System.out.printf("closing");
 		fileWriter.close();
 		logger.info("put completed");
 

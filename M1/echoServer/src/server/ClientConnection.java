@@ -163,7 +163,4 @@ public class ClientConnection implements Runnable {
 				+ msg.getMsg().trim() + "'");
 		return msg;
     }
-	
-
-	
 }

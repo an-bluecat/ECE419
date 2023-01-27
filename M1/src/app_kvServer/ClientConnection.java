@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.charset.*;
 
 import client.TextMessage;
 import org.apache.log4j.*;
@@ -32,17 +33,17 @@ public class ClientConnection implements Runnable {
 	private Socket clientSocket;
 	private InputStream input;
 	private OutputStream output;
-	private KVServer kvServer;
+	private KVServer kvServer = null;
 	
 	/**
 	 * Constructs a new CientConnection object for a given TCP socket.
 	 * @param clientSocket the Socket object for the client connection.
 	 */
-	public ClientConnection(Socket clientSocket) {
+	public ClientConnection(Socket clientSocket, int portNumber) {
 		this.clientSocket = clientSocket;
 		this.isOpen = true;
-		this.kvServer = kvServer;
 
+		kvServer = new KVServer(portNumber);
 	}
 	
 	/**
@@ -60,12 +61,14 @@ public class ClientConnection implements Runnable {
 					+ clientSocket.getLocalPort()));
 			
 			while(isOpen) {
+				System.out.printf("Looping in client connection\n");
 				try {
 					TextMessage latestMsg = receiveMessage();
 					// see if it's a json object. If so, then this is get/put request
 					try {
 						logger.info("json object parsing\n");
-						JSONObject json = new JSONObject(latestMsg);
+						System.out.println("lastest message: " + latestMsg.getMsg());
+						JSONObject json = new JSONObject(latestMsg.getMsg());
 						logger.info("json object parsed\n");
 						String command = json.getString("command");
 						String key = json.getString("key");
@@ -74,24 +77,27 @@ public class ClientConnection implements Runnable {
 						// if command is get, then call get method
 						if (command.equals("get")) {
 							try{
-							String result = this.kvServer.getKV(key);
-							// if result is null, then key does not exist
-							if (result == null) {
-								logger.info("no result found\n");
-								sendMessage(new TextMessage("not in storage"));
+								String result = kvServer.getKV(key);
+								// if result is null, then key does not exist
+								if (result == null) {
+									logger.info("no result found\n");
+									sendMessage(new TextMessage("not in storage"));
 
-							} else {
-								logger.info("result is " + result + "\n");
-								sendMessage(new TextMessage(result));
-							}}
+								} else {
+									logger.info("result is " + result + "\n");
+									sendMessage(new TextMessage(result));
+								}
+							}
 							catch(Exception e){
 								sendMessage(new TextMessage("get function failed"));
 							}
 						} else if (command.equals("put")) {
 							// if command is put, then call put method
 							try{
-								this.kvServer.putKV(key, value);
-							}catch(Exception e){
+								System.out.println(key + " " + value);
+								kvServer.putKV(key, value);
+							} catch(Exception e){
+								e.printStackTrace();
 								sendMessage(new TextMessage("put function failed"));
 							}
 							
@@ -161,7 +167,8 @@ public class ClientConnection implements Runnable {
 		byte read = (byte) input.read();	
 		boolean reading = true;
 		
-//		logger.info("First Char: " + read);
+		
+		logger.info("First Char: " + read);
 //		Check if stream is closed (read returns -1)
 //		if (read == -1){
 //			TextMessage msg = new TextMessage("");
@@ -208,10 +215,12 @@ public class ClientConnection implements Runnable {
 			System.arraycopy(bufferBytes, 0, tmp, msgBytes.length, index);
 		}
 		
-		msgBytes = tmp;
-		
+		msgBytes = tmp;		
+		// String message = new String(msgBytes, StandardCharsets.UTF_8);
+		// System.out.println("message: " + message);
 		/* build final String */
 		TextMessage msg = new TextMessage(msgBytes);
+		// System.out.println("converted message: " + msg.getMsg());
 		logger.info("RECEIVE \t<" 
 				+ clientSocket.getInetAddress().getHostAddress() + ":" 
 				+ clientSocket.getPort() + ">: '" 
