@@ -1,21 +1,19 @@
 package client;
 
 import java.io.Serializable;
-import shared.messages.KVMessage;
 
 /**
  * Represents a simple text message, which is intended to be received and sent 
  * by the server.
  */
 public class TextMessage implements Serializable {
-
+	
 	private static final long serialVersionUID = 5549512212003782618L;
 	private String msg;
 	private byte[] msgBytes;
 	private static final char LINE_FEED = 0x0A;
 	private static final char RETURN = 0x0D;
-
-
+	
     /**
      * Constructs a TextMessage object with a given array of bytes that 
      * forms the message.
