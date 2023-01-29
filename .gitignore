@@ -11,7 +11,7 @@
 .mtj.tmp/
 /bin/
 /storage
-
+!libs/*.jar
 /.nfs*
 .metadata/*
 
