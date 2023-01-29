@@ -11,13 +11,13 @@
 .mtj.tmp/
 /bin/
 /storage
-!libs/*.jar
 /.nfs*
 .metadata/*
 
 
 # Package Files #
 *.jar
+!libs/*.jar
 *.war
 *.nar
 *.ear
