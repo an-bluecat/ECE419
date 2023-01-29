@@ -14,6 +14,8 @@ import client.Client;
 import client.ClientSocketListener;
 import client.TextMessage;
 
+import shared.messages.KVMessage;
+
 public class Application implements ClientSocketListener {
 
 	private static Logger logger = Logger.getRootLogger();
@@ -68,7 +70,44 @@ public class Application implements ClientSocketListener {
 				printError("Invalid number of parameters!");
 			}
 			
-		} else  if (tokens[0].equals("send")) {
+		} else if (tokens[0].equals("get")) {
+			if(tokens.length == 2) {
+				if(client != null){
+					try {
+                		KVMessage handler = client.get(tokens[1]);
+						System.out.println("Server Response: " + handler.getResponseString());
+					} catch (Exception e) {
+						printError("An error occurred while trying to get the value: " + e.getMessage());
+					}
+				} else {
+					printError("Not connected!");
+				}
+			} else {
+				printError("get command has to be 2 parameters!");
+			}
+			
+		} else if (tokens[0].equals("put")) {
+			if(tokens.length >= 3) {
+				if(client != null){
+					try {
+						StringBuilder msg = new StringBuilder();
+						for(int i = 2; i < tokens.length; i++) {
+							msg.append(tokens[i]);
+							if (i != tokens.length -1 ) {
+								msg.append(" ");
+							}
+						}	
+						client.put(tokens[1], msg.toString());
+					} catch (Exception e) {
+						printError("An error occurred while trying to put the value: " + e.getMessage());
+					}
+				} else {
+					printError("Not connected!");
+				}
+			} else {
+				printError("put command has to be at least 3 parameters!");
+			}
+		}else  if (tokens[0].equals("send")) {
 			if(tokens.length >= 2) {
 				if(client != null && client.isRunning()){
 					StringBuilder msg = new StringBuilder();

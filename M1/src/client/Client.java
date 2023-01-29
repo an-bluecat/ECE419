@@ -12,6 +12,9 @@ import org.apache.log4j.Logger;
 
 import client.ClientSocketListener.SocketStatus;
 
+import shared.messages.KVMessageHandler;
+import shared.messages.KVMessage;
+
 public class Client extends Thread {
 
 	private Logger logger = Logger.getRootLogger();
@@ -21,6 +24,7 @@ public class Client extends Thread {
 	private Socket clientSocket;
 	private OutputStream output;
  	private InputStream input;
+	private KVMessageHandler kvMessageHandler;
 	
 	private static final int BUFFER_SIZE = 1024;
 	private static final int DROP_SIZE = 1024 * BUFFER_SIZE;
@@ -39,6 +43,58 @@ public class Client extends Thread {
 	 * Initializes and starts the client connection. 
 	 * Loops until the connection is closed or aborted by the client.
 	 */
+	 // 	@Override
+	public KVMessage put(String key, String value) throws Exception {
+		System.out.printf("putting");
+		String command = "put";
+		kvMessageHandler = new KVMessageHandler(command, key, value); //Message handler constructs json
+
+		// sending request
+		try {	
+			kvMessageHandler.sendKVRequest(clientSocket);
+		} catch (IOException e) {
+			logger.error("Request forwarding not successful");
+			System.exit(1);
+		}
+		System.out.printf("System sending finished" );
+		// receiving response
+		try {
+			kvMessageHandler.receiveKVResponse();
+			System.out.printf("Putting finished");
+			return kvMessageHandler;
+		} catch (IOException e) {
+			System.out.printf("putting failed with exception");
+			logger.error("Response receiving not successful");
+			// TODO: message content checking
+			System.exit(1);
+		}
+		System.out.printf("putting failed");
+		return null;
+	}
+
+	
+	public KVMessage get(String key) throws Exception {
+		// constructing json data
+		// Format: json with key and value being "" indicates a get request
+		String command = "get";
+		kvMessageHandler = new KVMessageHandler(command, key, "");
+
+		try {
+			kvMessageHandler.sendKVRequest(clientSocket);
+		} catch (IOException e) {
+			logger.error("Request forwarding not successful");
+			System.exit(1);
+		}
+
+		try {
+			kvMessageHandler.receiveKVResponse();
+			return kvMessageHandler;
+		} catch (IOException e) {
+			logger.error("Response receiving not successful");
+			System.exit(1);
+		}
+ 		return null;
+	}
 	public void run() {
 		try {
 			output = clientSocket.getOutputStream();
